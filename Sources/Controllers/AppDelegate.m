@@ -9,6 +9,7 @@
 #import "AppDelegate.h"
 #import "SystemVolume.h"
 #import "AccessibilityDialog.h"
+#import "GriffinManager.h"
 
 #import <IOKit/hidsystem/ev_keymap.h>
 
@@ -116,13 +117,14 @@ CGEventRef event_tap_callback(CGEventTapProxy proxy, CGEventType type, CGEventRe
 
 #pragma mark - Class extension for status menu
 
-@interface AppDelegate () <NSMenuDelegate>
+@interface AppDelegate () <GriffinManagerDelegate, NSMenuDelegate>
 {
     //StatusItemView* _statusBarItemView;
     NSTimer* _statusBarHideTimer;
     NSPopover* _hideFromStatusBarHintPopover;
     NSTextField* _hideFromStatusBarHintLabel;
     NSTimer *_hideFromStatusBarHintPopoverUpdateTimer;
+    GriffinManager *_griffinManager;
     
     NSView* _hintView;
     NSViewController* _hintVC;
@@ -662,6 +664,10 @@ static NSTimeInterval updateSystemVolumeInterval=0.1f;
         
         [accessibilityDialog showWindow:self];
     }
+    
+    _griffinManager = [GriffinManager new];
+    _griffinManager.delegate = self;
+    
 }
 
 - (BOOL)applicationShouldHandleReopen:(NSApplication *)sender hasVisibleWindows:(BOOL)flag
@@ -1222,6 +1228,34 @@ static NSTimeInterval updateSystemVolumeInterval=0.1f;
     {
         [updateSystemVolumeTimer invalidate];
         updateSystemVolumeTimer = nil;
+    }
+}
+
+#pragma mark - GriffinManagerDelegate
+
+- (void)deviceDidConnect:(IOHIDDeviceRef)device {
+    NSLog(@"Device connected");
+}
+
+- (void)deviceDidDisconnect:(IOHIDDeviceRef)device {
+    NSLog(@"Device disconnected");
+}
+
+// Transfer from device
+- (void)deviceDidChange:(IOHIDValueRef)value {
+    IOHIDElementRef element = IOHIDValueGetElement(value);
+    NSData * data = [NSData dataWithBytes: IOHIDValueGetBytePtr(value) length: IOHIDValueGetLength(value)];
+    uint32_t scancode = IOHIDElementGetUsage(element);
+    const unsigned char* bytes = [data bytes];
+    if (scancode == 51) {
+        if (bytes[0] > 0x80) {
+            [self setVolumeUp:false];
+        } else {
+            [self setVolumeUp:true];
+        }
+    }
+    if (scancode == 1 && bytes[0] == 1) {
+        [self sendMediaKey:NX_KEYTYPE_PLAY];
     }
 }
 
