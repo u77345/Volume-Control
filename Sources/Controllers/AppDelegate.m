@@ -652,7 +652,7 @@ static NSTimeInterval updateSystemVolumeInterval=0.1f;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(NextTrackMusic:) name:@"NextTrackMusic" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(PreviousTrackMusic:) name:@"PreviousTrackMusic" object:nil];
     
-    [[[NSWorkspace sharedWorkspace] notificationCenter] addObserver: self selector: @selector(receiveWakeNote:) name:NSWorkspaceDidWakeNotification4 object: NULL];
+    [[[NSWorkspace sharedWorkspace] notificationCenter] addObserver: self selector: @selector(receiveWakeNote:) name:NSWorkspaceDidWakeNotification object: NULL];
     
     signal(SIGTERM, handleSIGTERM);
     
@@ -673,6 +673,7 @@ static NSTimeInterval updateSystemVolumeInterval=0.1f;
     _griffinManager.delegate = self;
     
     initializePowerNotifications();
+
 }
 
 - (BOOL)applicationShouldHandleReopen:(NSApplication *)sender hasVisibleWindows:(BOOL)flag
@@ -1264,6 +1265,7 @@ static NSTimeInterval updateSystemVolumeInterval=0.1f;
     }
 }
 
+
 #pragma mark - power manager
 
 static void initializePowerNotifications (void)
@@ -1312,5 +1314,6 @@ void powerCallback (void *rootPort, io_service_t y, natural_t msgType, void *msg
         break;
     }
 }
+
 
 @end
