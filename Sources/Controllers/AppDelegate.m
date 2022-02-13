@@ -12,6 +12,9 @@
 #import "GriffinManager.h"
 
 #import <IOKit/hidsystem/ev_keymap.h>
+#import <IOKit/pwr_mgt/IOPMLib.h>
+#import <IOKit/ps/IOPowerSources.h>
+#import <IOKit/ps/IOPSKeys.h>
 
 #import "OSD.h"
 
@@ -577,6 +580,7 @@ static NSTimeInterval updateSystemVolumeInterval=0.1f;
 
 -(void)awakeFromNib
 {
+    NSLog(@"Wake from nib");
 }
 
 -(void)completeInitialization
@@ -648,7 +652,7 @@ static NSTimeInterval updateSystemVolumeInterval=0.1f;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(NextTrackMusic:) name:@"NextTrackMusic" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(PreviousTrackMusic:) name:@"PreviousTrackMusic" object:nil];
     
-    [[[NSWorkspace sharedWorkspace] notificationCenter] addObserver: self selector: @selector(receiveWakeNote:) name:NSWorkspaceDidWakeNotification object: NULL];
+    [[[NSWorkspace sharedWorkspace] notificationCenter] addObserver: self selector: @selector(receiveWakeNote:) name:NSWorkspaceDidWakeNotification4 object: NULL];
     
     signal(SIGTERM, handleSIGTERM);
     
@@ -668,6 +672,7 @@ static NSTimeInterval updateSystemVolumeInterval=0.1f;
     _griffinManager = [GriffinManager new];
     _griffinManager.delegate = self;
     
+    initializePowerNotifications();
 }
 
 - (BOOL)applicationShouldHandleReopen:(NSApplication *)sender hasVisibleWindows:(BOOL)flag
@@ -1256,6 +1261,55 @@ static NSTimeInterval updateSystemVolumeInterval=0.1f;
     }
     if (scancode == 1 && bytes[0] == 1) {
         [self sendMediaKey:NX_KEYTYPE_PLAY];
+    }
+}
+
+#pragma mark - power manager
+
+static void initializePowerNotifications (void)
+{
+    static io_connect_t    rootPort;    /* used by powerCallback() via context pointer */
+    
+    IONotificationPortRef    notificationPort;
+    io_object_t        notifier;
+
+    rootPort = IORegisterForSystemPower(&rootPort, &notificationPort, powerCallback, &notifier);
+    if (! rootPort) {
+        NSLog(@"IORegisterForSystemPower failed");
+        exit (1);
+    }
+    CFRunLoopAddSource (CFRunLoopGetCurrent(), IONotificationPortGetRunLoopSource(notificationPort), kCFRunLoopDefaultMode);
+    NSLog(@"Registered for PowerNotifications");
+}
+
+void powerCallback (void *rootPort, io_service_t y, natural_t msgType, void *msgArgument)
+{
+
+    NSLog(@"powerCallback: message_type %08lx, arg %08lx\n",
+        (long unsigned int) msgType, (long  unsigned int) msgArgument);
+
+    switch (msgType) {
+    case kIOMessageCanSystemSleep :
+        NSLog(@"Can sleep");
+        int result = 0;
+        if (result)
+            IOCancelPowerChange (* (io_connect_t *) rootPort, (long) msgArgument);
+        else
+            IOAllowPowerChange (* (io_connect_t *) rootPort, (long) msgArgument);
+        break;
+            
+    case kIOMessageSystemWillSleep :
+        NSLog(@"Will sleep");
+        IOAllowPowerChange (* (io_connect_t *) rootPort, (long) msgArgument);
+        break;
+            
+    case kIOMessageSystemWillNotSleep :
+        NSLog(@"Will not sleep");
+        break;
+            
+    case kIOMessageSystemHasPoweredOn :
+        NSLog(@"Has powered on");
+        break;
     }
 }
 

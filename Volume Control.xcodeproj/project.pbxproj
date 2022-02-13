@@ -24,6 +24,7 @@
 		65996E09267EB0FF0080A9A5 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 65996E08267EB0FF0080A9A5 /* main.m */; };
 		65996E1A267EB14F0080A9A5 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 65996E13267EB14F0080A9A5 /* AppDelegate.m */; };
 		65996E1B267EB14F0080A9A5 /* SystemVolume.m in Sources */ = {isa = PBXBuildFile; fileRef = 65996E16267EB14F0080A9A5 /* SystemVolume.m */; };
+		84175B99278A262100A40B33 /* GriffinManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 84175B98278A262100A40B33 /* GriffinManager.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -110,6 +111,8 @@
 		65996E16267EB14F0080A9A5 /* SystemVolume.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SystemVolume.m; sourceTree = "<group>"; };
 		65996E17267EB14F0080A9A5 /* ISSoundAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ISSoundAdditions.h; sourceTree = "<group>"; };
 		65996E1C267EB3030080A9A5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Info.plist; path = VolumeControl/Info.plist; sourceTree = "<group>"; };
+		84175B98278A262100A40B33 /* GriffinManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GriffinManager.m; sourceTree = "<group>"; };
+		84175B9A278A267400A40B33 /* GriffinManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GriffinManager.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -272,6 +275,8 @@
 				65996E10267EB14F0080A9A5 /* OSD.h */,
 				65996E15267EB14F0080A9A5 /* SystemVolume.h */,
 				65996E16267EB14F0080A9A5 /* SystemVolume.m */,
+				84175B98278A262100A40B33 /* GriffinManager.m */,
+				84175B9A278A267400A40B33 /* GriffinManager.h */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -428,6 +433,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				65996E1A267EB14F0080A9A5 /* AppDelegate.m in Sources */,
+				84175B99278A262100A40B33 /* GriffinManager.m in Sources */,
 				65996D01267EAB9E0080A9A5 /* AccessibilityDialog.m in Sources */,
 				65996E1B267EB14F0080A9A5 /* SystemVolume.m in Sources */,
 				65996E09267EB0FF0080A9A5 /* main.m in Sources */,
@@ -557,7 +563,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = 9V3X7C8VCK;
+				DEVELOPMENT_TEAM = Q322KCNJ97;
 				ENABLE_HARDENED_RUNTIME = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -585,7 +591,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = 9V3X7C8VCK;
+				DEVELOPMENT_TEAM = Q322KCNJ97;
 				ENABLE_HARDENED_RUNTIME = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",

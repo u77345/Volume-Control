@@ -8,7 +8,6 @@
 @interface GriffinManager () {
     IOHIDManagerRef _hidManager;
 }
-
 @end
 
 @implementation GriffinManager
@@ -25,7 +24,7 @@
         IOHIDManagerRegisterDeviceRemovalCallback(_hidManager, disconnect, (__bridge void*)self);
         IOHIDManagerRegisterInputValueCallback(_hidManager, event, (__bridge void*)self);
         IOHIDManagerScheduleWithRunLoop(_hidManager, CFRunLoopGetCurrent(), kCFRunLoopCommonModes);
-        
+
         // Errors are ignored here
         IOHIDManagerOpen(_hidManager, kIOHIDOptionsTypeNone);
     }
